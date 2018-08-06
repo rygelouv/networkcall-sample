@@ -8,12 +8,6 @@ import retrofit2.HttpException
 import retrofit2.Response
 
 
-/**
- * Created by hospicehounsou on 14,May,2018
- * © Makeba ,
- * Dakar, Senegal.
- */
-
 suspend fun <T : Any> Deferred<Response<T>>.awaitResult(): Result<T> {
     return suspendCancellableCoroutine { continuation ->
 

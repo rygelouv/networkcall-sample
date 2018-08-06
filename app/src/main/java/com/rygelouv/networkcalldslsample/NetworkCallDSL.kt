@@ -7,13 +7,7 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import retrofit2.Response
 
-/**
- * Created by rygelouv on 7/25/18.
- * <p>
- * MakebaMoney
- * Copyright (c) 2018 Makeba Inc All rights reserved.
- * 238 4580099
- */
+
 
 class CallHandler<RESPONSE : Any, DATA: Any> {
     lateinit var client: Deferred<Response<RESPONSE>>

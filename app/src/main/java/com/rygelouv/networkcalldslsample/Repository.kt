@@ -9,12 +9,6 @@ import okhttp3.OkHttpClient
 
 
 
-/**
- * Created by rygelouv on 8/6/18.
- * <p>
- * NetworkCallDSLSample
- * Copyright (c) 2018 Makeba Inc All rights reserved.
- */
 class Repository {
     fun getPostList() = networkCall<PostResponse, List<Post>> {
         client = PostsAPI.postService.getPostList()

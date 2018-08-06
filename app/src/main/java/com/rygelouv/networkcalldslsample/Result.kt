@@ -4,11 +4,6 @@ package com.rygelouv.networkcalldslsample
 import okhttp3.Response
 import retrofit2.HttpException
 
-/**
- * Created by hospicehounsou on 14,May,2018
- * © Makeba ,
- * Dakar, Senegal.
- */
 
 /**
  * Sealed class of HTTP result
