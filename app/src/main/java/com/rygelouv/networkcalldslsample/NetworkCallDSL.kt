@@ -1,35 +1,40 @@
 package com.rygelouv.networkcalldslsample
 
-import android.arch.lifecycle.MutableLiveData
-import kotlinx.coroutines.experimental.Deferred
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.*
+import retrofit2.HttpException
 import retrofit2.Response
-
-
 
 class CallHandler<RESPONSE : Any, DATA: Any> {
     lateinit var client: Deferred<Response<RESPONSE>>
 
+    @Suppress("UNCHECKED_CAST")
     fun makeCall() : MutableLiveData<Resource<DATA>> {
         val result = MutableLiveData<Resource<DATA>>()
         result.setValue(Resource.loading(null))
-        launch {
+
+        GlobalScope.launch {
             try {
                 val response = client.awaitResult().getOrThrow() as DataResponse<DATA>
-                withContext(UI) { result.value = Resource.success(response.retrieveData()) }
-            }
-            catch (e: Exception) {
-                // e.handleException(result)
+
+                withContext(Dispatchers.Main) {
+                    result.value = Resource.success(response.retrieveData())
+                }
+            } catch (e: HttpException) {
+                withContext(Dispatchers.Main) {
+                    result.value = Resource.error("${e.message} | code ${e.response().code()}", 0)
+                }
+                e.printStackTrace()
             }
         }
+
         return result
     }
 }
 
-fun <RESPONSE: DataResponse<*>, DATA: Any> networkCall(block: CallHandler<RESPONSE, DATA>.() -> Unit): MutableLiveData<Resource<DATA>> = CallHandler<RESPONSE, DATA>().apply(block).makeCall()
+fun <RESPONSE: DataResponse<*>, DATA: Any> networkCall(block: CallHandler<RESPONSE, DATA>.() -> Unit): MutableLiveData<Resource<DATA>>
+    = CallHandler<RESPONSE, DATA>().apply(block).makeCall()
 
-interface DataResponse<T> {
+    interface DataResponse<T> {
     fun retrieveData(): T
 }

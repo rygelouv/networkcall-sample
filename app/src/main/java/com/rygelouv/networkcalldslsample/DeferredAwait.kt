@@ -1,17 +1,15 @@
 package com.rygelouv.networkcalldslsample
 
-import kotlinx.coroutines.experimental.CancellableContinuation
-import kotlinx.coroutines.experimental.Deferred
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.suspendCancellableCoroutine
+import kotlinx.coroutines.*
 import retrofit2.HttpException
 import retrofit2.Response
+import kotlin.coroutines.resume
 
 
 suspend fun <T : Any> Deferred<Response<T>>.awaitResult(): Result<T> {
     return suspendCancellableCoroutine { continuation ->
 
-        launch {
+        GlobalScope.launch {
           try {
               val response = await()
               continuation.resume(
@@ -49,7 +47,7 @@ suspend fun <T : Any> Deferred<Response<T>>.awaitResult(): Result<T> {
 
 
 private fun Deferred<Response<*>>.registerOnCompletion(continuation: CancellableContinuation<*>) {
-    continuation.invokeOnCompletion {
+    continuation.invokeOnCancellation {
         if (continuation.isCancelled)
             try {
                 cancel()
