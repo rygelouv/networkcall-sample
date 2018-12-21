@@ -12,7 +12,7 @@ import retrofit2.http.Query
 
 object Repository {
     fun getRepos(query: String) = networkCall<ResposResponse, List<Repo>> {
-        client = PostsAPI.postService.getRepos(query)
+        client = GithubAPI.githubService.getRepos(query)
     }
 }
 
@@ -27,8 +27,7 @@ abstract class BaseApiResponse<T> {
     var incomplete_results: Boolean = false
 }
 
-object PostsAPI {
-
+object GithubAPI {
     var API_BASE_URL: String = "https://api.github.com/"
     var httpClient = OkHttpClient.Builder()
     var builder: Retrofit.Builder = Retrofit.Builder()
@@ -39,9 +38,9 @@ object PostsAPI {
             .client(httpClient.build())
             .build()
 
-    var postService = retrofit.create<PostService>(PostService::class.java)
+    var githubService = retrofit.create<GithubService>(GithubService::class.java)
 
-    interface PostService {
+    interface GithubService {
         @GET("search/repositories")
         fun getRepos(@Query("q") query: String): Deferred<Response<ResposResponse>>
     }
