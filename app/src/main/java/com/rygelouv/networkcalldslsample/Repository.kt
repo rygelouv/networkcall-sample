@@ -1,5 +1,6 @@
 package com.rygelouv.networkcalldslsample
 
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
 import kotlinx.coroutines.experimental.Deferred
 import retrofit2.Response
 import retrofit2.http.GET
@@ -33,6 +34,7 @@ object PostsAPI {
     var builder: Retrofit.Builder = Retrofit.Builder()
             .baseUrl(API_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
     var retrofit = builder
             .client(httpClient.build())
             .build()
