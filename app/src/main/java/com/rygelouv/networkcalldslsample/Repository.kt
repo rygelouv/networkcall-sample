@@ -11,14 +11,14 @@ import retrofit2.http.Query
 
 
 object Repository {
-    fun getRepos(query: String) = networkCall<ResposResponse, List<Repo>> {
+    fun getRepos(query: String) = networkCall<ReposResponse, List<Repo>> {
         client = GithubAPI.githubService.getRepos(query)
     }
 }
 
 data class Repo(val id: Int, val name: String, val full_name: String, val description: String, val git_url:String)
 
-data class ResposResponse(val items: List<Repo>): BaseApiResponse<Repo>(), DataResponse<List<Repo>> {
+data class ReposResponse(val items: List<Repo>): BaseApiResponse<Repo>(), DataResponse<List<Repo>> {
     override fun retrieveData(): List<Repo> = items
 }
 
@@ -42,6 +42,6 @@ object GithubAPI {
 
     interface GithubService {
         @GET("search/repositories")
-        fun getRepos(@Query("q") query: String): Deferred<Response<ResposResponse>>
+        fun getRepos(@Query("q") query: String): Deferred<Response<ReposResponse>>
     }
 }
